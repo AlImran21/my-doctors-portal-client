@@ -15,7 +15,7 @@ const Contact = () => {
                 <br />
                 <input className='w-[450px] h-[48px] px-3 mb-5 border-0 outline-0 rounded-md' type="text" name="text" placeholder='Subject' required />
                 <br />
-                <textarea className='px-3 py-3 border-0 outline-0 mb-5 rounded-md' name="" cols="53" rows="6" placeholder='Your Message' />
+                <textarea className='px-3 py-3 border-0 outline-0 mb-5 rounded-md' name="" cols="55" rows="6" placeholder='Your Message' />
                 <br />
                 <PrimaryButton>Submit</PrimaryButton>
             </div>
