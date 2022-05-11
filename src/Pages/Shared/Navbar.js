@@ -17,7 +17,7 @@ const Navbar = () => {
 
     return (
         <div>
-            <div className="navbar">
+            <div className="navbar bg-gradient-to-r from-secondary to-primary">
                 <div className="navbar-start">
                     <div className="dropdown">
                         <label tabIndex="0" className="btn btn-ghost lg:hidden">

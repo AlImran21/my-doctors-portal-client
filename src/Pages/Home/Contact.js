@@ -5,7 +5,7 @@ import appointment from '../../assets/images/appointment.png';
 
 const Contact = () => {
     return (
-        <div style={{ background: `url(${appointment})` }} className='my-28 p-12'>
+        <div style={{ background: `url(${appointment})` }} className='mt-28 p-12'>
             <div className='text-center my-12'>
                 <p className='text-primary font-semibold text-xl'>Contact Us</p>
                 <h1 className='text-3xl text-white'>Stay connected with us</h1>
