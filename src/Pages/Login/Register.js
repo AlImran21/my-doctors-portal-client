@@ -1,31 +1,27 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import auth from '../../firebase.init';
-import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
-import { toast } from 'react-toastify';
+import { useCreateUserWithEmailAndPassword, useSignInWithGoogle, useUpdateProfile } from 'react-firebase-hooks/auth';
+import { toast, ToastContainer } from 'react-toastify';
 import { useForm } from "react-hook-form";
 import Loading from '../Shared/Loading';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-const Login = () => {
+
+const Register = () => {
 
     const [signInWithGoogle, googleUser, googleLoading, googleError] = useSignInWithGoogle(auth);
     const { register, formState: { errors }, handleSubmit } = useForm();
     const [
-        signInWithEmailAndPassword,
+        createUserWithEmailAndPassword,
         user,
         loading,
         error,
-    ] = useSignInWithEmailAndPassword(auth);
+    ] = useCreateUserWithEmailAndPassword(auth);
+    const [updateProfile, updating, updateError] = useUpdateProfile(auth);
 
     const navigate = useNavigate();
     const location = useLocation();
     let from = location?.state?.from?.pathname || '/';
-
-    useEffect(() => {
-        if (googleUser || user) {
-            navigate(from, { replace: true });
-        }
-    }, [googleUser, user, from, navigate]);
 
     let gError;
     let signInError;
@@ -42,9 +38,15 @@ const Login = () => {
         signInError = <small className='text-red-500'>{error?.message}</small>
     }
 
-    const onSubmit = data => {
-        console.log(data);
-        signInWithEmailAndPassword(data?.email, data?.password);
+    if (googleUser || user) {
+        navigate(from, { replace: true });
+    }
+
+    const onSubmit = async (data) => {
+        // console.log(data);
+        await createUserWithEmailAndPassword(data?.email, data?.password);
+        await updateProfile({ displayName: data?.name });
+        navigate('/appointment');
     }
 
 
@@ -52,9 +54,28 @@ const Login = () => {
         <div className='flex h-screen justify-center items-center'>
             <div className="card w-96 bg-base-100 shadow-xl">
                 <div className="card-body">
-                    <h2 className="text-center text-2xl font-bold">Login</h2>
+                    <h2 className="text-center text-2xl font-bold">Register</h2>
                     <form onSubmit={handleSubmit(onSubmit)}>
 
+                        <div className="form-control w-full max-w-xs">
+                            <label className="label">
+                                <span className="label-text">Name</span>
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="Your Name"
+                                className="input input-bordered w-full max-w-xs"
+                                {...register("name", {
+                                    required: {
+                                        value: true,
+                                        message: 'Name is required'
+                                    }
+                                })}
+                            />
+                            <label className="label">
+                                {errors.name?.type === 'required' && <span className="label-text-alt text-red-500">{errors?.name?.message}</span>}
+                            </label>
+                        </div>
                         <div className="form-control w-full max-w-xs">
                             <label className="label">
                                 <span className="label-text">Email</span>
@@ -104,9 +125,9 @@ const Login = () => {
                             </label>
                         </div>
                         {signInError}
-                        <input className='btn w-full text' type="submit" value='Login' />
+                        <input className='btn w-full text' type="submit" value='Register' />
                     </form>
-                    <p className='text-sm text-center'>New to Doctors Portal? <Link className='text-secondary' to='/register'>Create new account</Link></p>
+                    <p className='text-sm text-center'>Already have an account? <Link className='text-secondary' to='/login'>Login</Link></p>
                     <div>
                         <div className="divider">OR</div>
                         <button
@@ -119,9 +140,10 @@ const Login = () => {
                         {gError}
                     </div>
                 </div>
+                <ToastContainer />
             </div>
         </div>
     );
 };
 
-export default Login;
+export default Register;
