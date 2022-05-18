@@ -5,6 +5,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import { useForm } from "react-hook-form";
 import Loading from '../Shared/Loading';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import useToken from '../../hooks/useToken';
 
 
 const Register = () => {
@@ -17,7 +18,11 @@ const Register = () => {
         loading,
         error,
     ] = useCreateUserWithEmailAndPassword(auth);
+    
+    const [token] = useToken(googleUser || user);
+
     const [updateProfile, updating, updateError] = useUpdateProfile(auth);
+
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -38,15 +43,15 @@ const Register = () => {
         signInError = <small className='text-red-500'>{error?.message}</small>
     }
 
-    if (googleUser || user) {
-        navigate(from, { replace: true });
+    if (token) {
+        // navigate(from, { replace: true });
+        navigate('/appointment');
     }
 
     const onSubmit = async (data) => {
         // console.log(data);
         await createUserWithEmailAndPassword(data?.email, data?.password);
         await updateProfile({ displayName: data?.name });
-        navigate('/appointment');
     }
 
 
