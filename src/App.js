@@ -15,6 +15,8 @@ import RequireAuth from './Pages/Login/RequireAuth';
 import Navbar from './Pages/Shared/Navbar';
 import Users from './Pages/Dashboard/Users';
 import RequireAdmin from './Pages/Login/RequireAdmin';
+import AddDoctor from './Pages/Dashboard/AddDoctor';
+import ManageDoctors from './Pages/Dashboard/ManageDoctors';
 
 
 
@@ -46,6 +48,19 @@ function App() {
               <Users />
             </RequireAdmin>
           }></Route>
+
+          <Route path='addDoctor' element={
+            <RequireAdmin>
+              <AddDoctor />
+            </RequireAdmin>
+          }></Route>
+
+          <Route path='manageDoctors' element={
+            <RequireAdmin>
+              <ManageDoctors />
+            </RequireAdmin>
+          }></Route>
+
         </Route>
 
         <Route path='login' element={<Login />}></Route>
